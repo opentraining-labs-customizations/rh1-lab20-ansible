@@ -1,0 +1,7 @@
+---
+collections:
+  - ansible.netcommon
+  - community.general
+  - community.crypto
+  - cyberark.pas
+

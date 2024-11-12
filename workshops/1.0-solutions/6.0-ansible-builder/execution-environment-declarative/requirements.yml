@@ -1,0 +1,13 @@
+---
+collections:
+  - ansible.netcommon
+  - community.general
+  - community.crypto
+  - community.windows
+  - community.vmware
+  - community.aws
+  - community.azure
+  - cyberark.pas
+  - cloud.terraform
+  - azure.azcollection
+  - amazon.aws
