@@ -1,0 +1,20 @@
+---
+- name: Install packages servers
+  hosts: servers
+  become: true
+  tasks:
+    - name: Install packages
+      ansible.builtin.yum:
+        name: 
+          - ansible-builder.noarch
+          - ansible-rulebook.noarch
+          - ansible-lint.noarch
+          - socat.x86_64
+          - wireshark.x86_64
+          - tcpdump.x86_64
+          - ansible-navigator
+          - molecule
+        state: present
+
+
+

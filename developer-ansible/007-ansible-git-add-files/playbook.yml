@@ -1,0 +1,39 @@
+---
+- name: Git clone 008-ansible-copy-exercicio001-to-node1
+  hosts: node1.example.com
+  tasks:
+
+    - name: Read-write git checkout from github
+      ansible.builtin.git:
+        repo: git@server.example.com:root/eda-debug.git
+        dest: /home/ec2-user/eda-debug
+      ignore_errors: true
+
+    - name: Read-write git checkout from github
+      ansible.builtin.git:
+        repo: git@server.example.com:root/rh1-aap-extra-vars-eda.git
+        dest: /home/ec2-user/rh1-aap-extra-vars-eda
+      ignore_errors: true
+
+    - name: Read-write git checkout from github
+      ansible.builtin.git:
+        repo: git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
+        dest: /home/ec2-user/rh1-ansible-eda-vars-zabbix
+      ignore_errors: true
+
+    - name: Copy using inline content
+      ansible.builtin.copy:
+        content: 'eda-debug'
+        dest: /home/ec2-user/eda-debug/README.md
+
+
+    - name: Copy using inline content
+      ansible.builtin.copy:
+        content: 'rh1-aap-extra-vars-eda'
+        dest: /home/ec2-user/rh1-aap-extra-vars-eda/README.md
+
+
+    - name: Copy using inline content
+      ansible.builtin.copy:
+        content: 'rh1-aap-extra-vars-eda'
+        dest: /home/ec2-user/rh1-ansible-eda-vars-zabbix/README.md

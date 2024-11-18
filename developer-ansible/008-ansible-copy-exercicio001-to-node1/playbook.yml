@@ -1,0 +1,38 @@
+---
+- name: Git clone and add files
+  hosts: node1.example.com
+  tasks:
+
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /home/ec2-user/01-lab/
+        state: directory
+        mode: '0755'
+        owner: ec2-user
+        group: ec2-user
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: files/hello-rh1.yml
+        dest: /home/ec2-user/01-lab/hello-rh1.yml
+        owner: ec2-user
+        group: ec2-user
+        mode: '0644'
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: files/webhook-example.yml
+        dest: /home/ec2-user/01-lab/webhook-example.yml
+        owner: ec2-user
+        group: ec2-user
+        mode: '0644'
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: files/inventory.yml
+        dest: /home/ec2-user/01-lab/inventory.yml
+        owner: ec2-user
+        group: ec2-user
+        mode: '0644'
+
+

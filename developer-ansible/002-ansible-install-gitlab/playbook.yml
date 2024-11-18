@@ -1,0 +1,54 @@
+---
+- name: Install gitlab port 443 on Server Node
+  hosts: server.example.com
+  become: true
+  tasks:
+    - name: Install 
+      ansible.builtin.yum:
+        name: 
+          - policycoreutils 
+          - perl
+          - postfix
+        state: present
+
+    - name: Enable service postfix, and not touch the state
+      ansible.builtin.service:
+        name: postfix
+        enabled: yes
+    
+    - name: Start service postfix, if not started
+      ansible.builtin.service:
+        name: postfix
+        state: started
+
+    - name: Run shell curl configuration
+      ansible.builtin.shell: sudo curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash  
+
+    - name: Run shell dnf install -y gitlab-ee 
+      ansible.builtin.shell: sudo EXTERNAL_URL="https://server.example.com" dnf install -y gitlab-ee
+
+    - name: Disable port 80
+      ansible.builtin.copy:
+        src: files/gitlab.rb
+        dest: /etc/gitlab/gitlab.rb
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Run shell gitlab-ctl reconfigure
+      ansible.builtin.shell: sudo gitlab-ctl reconfigure
+
+    - name: Disable port 80
+      ansible.builtin.copy:
+        src: files/gitlab-rest
+        dest: /tmp/gitlab-rest
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Run shell reset password
+      ansible.builtin.shell: sudo gitlab-rake "gitlab:password:reset[root]" < /tmp/gitlab-rest
+
+
+
+#OK
