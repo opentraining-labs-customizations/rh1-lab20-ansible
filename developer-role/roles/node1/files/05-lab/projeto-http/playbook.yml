@@ -1,0 +1,28 @@
+---
+- name: Create env
+  hosts: localhost
+  tasks:
+    - name: Add hosts
+      ansible.builtin.add_host:
+        name: "{{ hosts_update }}"
+        groups: rh1
+      with_items: '{{ hosts_update.split() }}'
+
+- name: RH1
+  hosts: rh1
+  become: true
+  remote_user: root
+  tasks:
+    - name: install httpd
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+    - name: start
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: Create index.html
+      ansible.builtin.copy:
+        content: "{{ ansible_facts.fqdn }}"
+        dest: /var/www/html/index.html

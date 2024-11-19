@@ -1,0 +1,17 @@
+---
+- name: Listen for events on a webhook
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+  rules:
+    - name: Zabbix Apache 
+      condition: event.payload.event_name is regex("Apache.*Service is down", ignorecase=true)
+      action:
+        run_job_template:
+          name: projeto-http
+          organization: Default
+          job_args:
+            extra_vars:
+              hosts_update: "{{ event.payload.host_host }}"

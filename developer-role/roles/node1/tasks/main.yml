@@ -1,0 +1,361 @@
+---
+# tasks file for node1
+#001
+- name: Install httpd
+  ansible.builtin.yum:
+    name: httpd
+    state: present
+- name: Ensure the default Apache port is 80
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^Listen '
+    insertafter: '^#Listen '
+    line: Listen 80
+- name: Enable service httpd, and not touch the state
+  ansible.builtin.service:
+    name: httpd
+    enabled: yes
+
+- name: Start service httpd, if not started
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+######################
+- name: Install repositorio zabbix
+  ansible.builtin.yum:
+    name: https://repo.zabbix.com/zabbix/6.4/rhel/9/x86_64/zabbix-release-latest.el9.noarch.rpm
+    state: present
+    disable_gpg_check: true
+- name: Install one specific version of Apache
+  ansible.builtin.yum:
+    name: zabbix-agent
+    state: present
+- name: Template a file to /etc/zabbix/zabbix_agentd.conf
+  ansible.builtin.copy:
+    src: files/zabbix_agentd.conf
+    dest: /etc/zabbix/zabbix_agentd.conf
+    owner: root
+    group: root
+    mode: '0655'
+- name: Enable service zabbix-agent, and not touch the state
+  ansible.builtin.service:
+    name: zabbix-agent
+    enabled: yes
+- name: Start service zabbix-agent, if not started
+  ansible.builtin.service:
+    name: zabbix-agent
+    state: started
+- name: Template a file to /etc/zabbix/zabbix_agentd.conf
+  ansible.builtin.copy:
+    src: files/id_rsa
+    dest: /home/ec2-user/.ssh/id_rsa
+    owner: ec2-user
+    group: ec2-user
+    mode: '0600'
+- name: Template a file to /etc/zabbix/zabbix_agentd.conf
+  ansible.builtin.copy:
+    src: files/id_rsa.pub
+    dest: /home/ec2-user/.ssh/id_rsa.pub
+    owner: ec2-user
+    group: ec2-user
+    mode: '0600'
+
+######################
+
+- name: Install packages
+  ansible.builtin.yum:
+    name: 
+      - ansible-builder.noarch
+      - ansible-rulebook.noarch
+      - ansible-lint.noarch
+      - socat.x86_64
+      - wireshark.x86_64
+      - tcpdump.x86_64
+      - ansible-navigator
+      - molecule
+    state: present
+
+######################
+
+- name: 'Install requirements'
+  pip:
+    name: "gitlab"
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+
+- name: 'Install requirements'
+  pip:
+    name: "python-gitlab"
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+
+- name: Create a GitLab Project using a username/password via oauth_token
+  community.general.gitlab_project:
+    api_url: https://server.example.com/
+    api_username: root
+    api_password: redhat..123
+    name: rh1-aap-extra-vars-eda
+    validate_certs: false 
+    initialize_with_readme: true
+
+- name: Create a GitLab Project using a username/password via oauth_token
+  community.general.gitlab_project:
+    api_url: https://server.example.com/
+    api_username: root
+    api_password: redhat..123
+    name: eda-debug
+    validate_certs: false
+    initialize_with_readme: true
+
+- name: Create a GitLab Project using a username/password via oauth_token
+  community.general.gitlab_project:
+    api_url: https://server.example.com/
+    api_username: root
+    api_password: redhat..123
+    name: rh1-ansible-eda-vars-zabbix
+    validate_certs: false
+    initialize_with_readme: true
+
+- name: "Create GitLab User"
+  community.general.gitlab_user:
+    api_url: https://server.example.com/
+    validate_certs: false
+    api_username: root
+    api_password: redhat..123
+    name: root
+    username: root
+    password: redhat..123
+    email: gitlab_admin_280646@example.com
+    sshkey_name: MySSH
+    sshkey_file: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCZOuvAqzQEFQfMcAQ9zkNRApU/VfP1RVzYOhgRRPhhstAnapsaWIQr5pSLGSITlULptkahQh+B9PgXzMUojzbuYJLFwWc4Vy+Ytg9MApcPqBS8DkwNeAmHGnwIAC4ZFQMlGt0pg2F5E8lVjvJTN7KJLDizE2WP4V9dDrgIKiVe3a3UsOdqAwqDQLt17/botYP5dtXZRJF8XkX+iFIuJ05LqGTn/nJnUEXchMK/zvpZj5zqHhnTLGD8b1XlnGYI5ocziB8qeNhJgTpAAThOtclXwBZUNIWK2Qm3xy5f6lZ/XilALwOzAFFIu+LeSIb/V6efUbBYLMs+DvaT6ygLX8n4Eceb+ko9XYMJlULHb9mEkhxvmK7FojwQRWcS2RvGroqUxlkYNHSYfsHxdUuisFb4gQ7bhesAVsAu8RcJnj9jqxNAqjzn8/gOfaMYzdxGLJo1X798rQ3iGfXgRv6dneFmmLbS7Vv/vKWlf4UoE/3eg3voLlZCYgVKn84YQX10mQk= lab-user@bastion.example.com
+    state: present
+  ignore_errors: true
+
+######################
+
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/01-lab/
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/01-lab/hello-rh1.yml
+    dest: /home/ec2-user/01-lab/hello-rh1.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/01-lab/webhook-example.yml
+    dest: /home/ec2-user/01-lab/webhook-example.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/01-lab/inventory.yml
+    dest: /home/ec2-user/01-lab/inventory.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+
+
+######################
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/02-lab/
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/02-lab/hello-rh1.yml
+    dest: /home/ec2-user/02-lab/hello-rh1.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/02-lab/webhook-example.yml
+    dest: /home/ec2-user/02-lab/webhook-example.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/02-lab/inventory.yml
+    dest: /home/ec2-user/02-lab/inventory.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+
+
+######################
+
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/03-lab/
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/03-lab/rh1-eda-example.tar.xz
+    dest: /home/ec2-user/03-lab/
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+- name: Extract rh1-eda-example.tar.xz into /home/ec2-user/03-lab/
+  ansible.builtin.unarchive:
+    src: /home/ec2-user/03-lab/rh1-eda-example.tar.xz
+    dest: /home/ec2-user/03-lab/
+    remote_src: yes
+
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/04-lab/
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/05-lab 
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+
+######################
+
+
+######################
+
+- name: Read-write git checkout from github
+  ansible.builtin.shell: cd /home/ec2-user/04-lab/ ; git clone git@server.example.com:root/eda-debug.git
+  become: false
+- name: Read-write git checkout from github
+  ansible.builtin.shell: cd /home/ec2-user/03-lab/ ; git clone  git@server.example.com:root/rh1-aap-extra-vars-eda.git
+  become: false
+- name: Read-write git checkout from github
+  ansible.builtin.shell: cd /home/ec2-user/05-lab ; git clone  git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
+  become: false
+
+######################
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/04-lab/
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/04-lab/eda-debug/rulebooks
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/04-lab/webhook-debug.yml 
+    dest: /home/ec2-user/04-lab/eda-debug/rulebooks/webhook-debug.yml 
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+
+
+######################
+
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix/rulebooks
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix/projeto-http
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/05-lab/rulebooks/webhook-zabbix.yml
+    dest: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix/rulebooks/webhook-zabbix.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/05-lab/projeto-http/playbook.yml
+    dest: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix/projeto-http/playbook.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/ec2-user/05-lab
+    state: directory
+    mode: '0755'
+    owner: ec2-user
+    group: ec2-user
+
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/05-lab/shell/FollowStream.sh
+    dest: /home/ec2-user/05-lab/FollowStream.sh
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+######################
+
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: files/06-lab/lab_06.tar.xz
+    dest: /home/ec2-user/
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+- name: Extract lab_06.tar.xz into /home/ec2-user/
+  ansible.builtin.unarchive:
+    src: /home/ec2-user/lab_06.tar.xz
+    dest: /home/ec2-user/
+    remote_src: yes
+
+- name: Rename dir 
+  ansible.builtin.shell: mv lab_06 06-lab
+
+
+######################
+
+- name: Remove file (delete file)
+  ansible.builtin.file:
+    path: /home/ec2-user/lab_06.tar.xz
+    state: absent
+
+- name: Remove file (delete file)
+  ansible.builtin.file:
+    path: /home/ec2-user/03-lab/rh1-eda-example.tar.xz
+    state: absent
+
+######################
