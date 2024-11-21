@@ -260,15 +260,34 @@
 
 ######################
 
+#- name: Read-write git checkout from github
+#  ansible.builtin.shell: cd /home/ec2-user/04-lab/ ; git clone git@server.example.com:root/eda-debug.git
+#  become: false
+#- name: Read-write git checkout from github
+#  ansible.builtin.shell: cd /home/ec2-user/03-lab/ ; git clone  git@server.example.com:root/rh1-aap-extra-vars-eda.git
+#  become: false
+#- name: Read-write git checkout from github
+#  ansible.builtin.shell: cd /home/ec2-user/05-lab ; git clone  git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
+#  become: false
+
 - name: Read-write git checkout from github
-  ansible.builtin.shell: cd /home/ec2-user/04-lab/ ; git clone git@server.example.com:root/eda-debug.git
+  ansible.builtin.git:
+    repo: git clone git@server.example.com:root/eda-debug.git
+    dest: /home/ec2-user/04-lab/
   become: false
+
 - name: Read-write git checkout from github
-  ansible.builtin.shell: cd /home/ec2-user/03-lab/ ; git clone  git@server.example.com:root/rh1-aap-extra-vars-eda.git
+  ansible.builtin.git:
+    repo: git@server.example.com:root/rh1-aap-extra-vars-eda.git
+    dest: /home/ec2-user/03-lab/
   become: false
+
 - name: Read-write git checkout from github
-  ansible.builtin.shell: cd /home/ec2-user/05-lab ; git clone  git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
+  ansible.builtin.git:
+    repo: git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
+    dest: /home/ec2-user/05-lab 
   become: false
+
 
 ######################
 
