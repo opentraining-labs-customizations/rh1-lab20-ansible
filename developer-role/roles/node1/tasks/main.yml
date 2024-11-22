@@ -272,20 +272,23 @@
 
 - name: Read-write git checkout from github
   ansible.builtin.git:
-    repo: git clone git@server.example.com:root/eda-debug.git
-    dest: /home/ec2-user/04-lab/
+    repo: git@server.example.com:root/eda-debug.git
+    dest: /home/ec2-user/04-lab/eda-debug
+    ssh_opts: "-o StrictHostKeyChecking=no"
   become: false
 
 - name: Read-write git checkout from github
   ansible.builtin.git:
     repo: git@server.example.com:root/rh1-aap-extra-vars-eda.git
-    dest: /home/ec2-user/03-lab/
+    dest: /home/ec2-user/03-lab/rh1-aap-extra-vars-eda
+    ssh_opts: "-o StrictHostKeyChecking=no"
   become: false
 
 - name: Read-write git checkout from github
   ansible.builtin.git:
     repo: git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
-    dest: /home/ec2-user/05-lab 
+    dest: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix
+    ssh_opts: "-o StrictHostKeyChecking=no"
   become: false
 
 
