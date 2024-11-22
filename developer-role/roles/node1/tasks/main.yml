@@ -270,29 +270,26 @@
 #  ansible.builtin.shell: cd /home/ec2-user/05-lab ; git clone  git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
 #  become: false
 
-- name: Read-write git checkout from github
-  ansible.builtin.git:
-    repo: git@server.example.com:root/eda-debug.git
-    dest: /home/ec2-user/04-lab/eda-debug
-    ssh_opts: "-o StrictHostKeyChecking=no"
-    key_file: /home/ec2-user/.ssh/id_rsa
-  become: false
-
-- name: Read-write git checkout from github
-  ansible.builtin.git:
-    repo: git@server.example.com:root/rh1-aap-extra-vars-eda.git
-    dest: /home/ec2-user/03-lab/rh1-aap-extra-vars-eda
-    ssh_opts: "-o StrictHostKeyChecking=no"
-    key_file: /home/ec2-user/.ssh/id_rsa
-  become: false
-
-- name: Read-write git checkout from github
-  ansible.builtin.git:
-    repo: git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
-    dest: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix
-    ssh_opts: "-o StrictHostKeyChecking=no"
-    key_file: /home/ec2-user/.ssh/id_rsa
-  become: false
+#- name: Read-write git checkout from github
+#  ansible.builtin.git:
+#    repo: git@server.example.com:root/eda-debug.git
+#    dest: /home/ec2-user/04-lab/eda-debug
+#    ssh_opts: "-o StrictHostKeyChecking=no"
+#  become: false
+#
+#- name: Read-write git checkout from github
+#  ansible.builtin.git:
+#    repo: git@server.example.com:root/rh1-aap-extra-vars-eda.git
+#    dest: /home/ec2-user/03-lab/rh1-aap-extra-vars-eda
+#    ssh_opts: "-o StrictHostKeyChecking=no"
+#  become: false
+#
+#- name: Read-write git checkout from github
+#  ansible.builtin.git:
+#    repo: git@server.example.com:root/rh1-ansible-eda-vars-zabbix.git
+#    dest: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix
+#    ssh_opts: "-o StrictHostKeyChecking=no"
+#  become: false
 
 
 ######################
@@ -307,7 +304,7 @@
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
-    path: /home/ec2-user/04-lab/eda-debug/rulebooks
+    path: /home/ec2-user/04-lab/rulebooks
     state: directory
     mode: '0755'
     owner: ec2-user
@@ -315,7 +312,7 @@
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: files/04-lab/webhook-debug.yml 
-    dest: /home/ec2-user/04-lab/eda-debug/rulebooks/webhook-debug.yml 
+    dest: /home/ec2-user/04-lab/rulebooks/webhook-debug.yml 
     owner: ec2-user
     group: ec2-user
     mode: '0644'
@@ -326,14 +323,14 @@
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
-    path: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix/rulebooks
+    path: /home/ec2-user/05-lab/rulebooks
     state: directory
     mode: '0755'
     owner: ec2-user
     group: ec2-user
 - name: Create a directory if it does not exist
   ansible.builtin.file:
-    path: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix/projeto-http
+    path: /home/ec2-user/05-lab/projeto-http
     state: directory
     mode: '0755'
     owner: ec2-user
@@ -341,14 +338,14 @@
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: files/05-lab/rulebooks/webhook-zabbix.yml
-    dest: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix/rulebooks/webhook-zabbix.yml
+    dest: /home/ec2-user/05-lab/rulebooks/webhook-zabbix.yml
     owner: ec2-user
     group: ec2-user
     mode: '0644'
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: files/05-lab/projeto-http/playbook.yml
-    dest: /home/ec2-user/05-lab/rh1-ansible-eda-vars-zabbix/projeto-http/playbook.yml
+    dest: /home/ec2-user/05-lab/projeto-http/playbook.yml
     owner: ec2-user
     group: ec2-user
     mode: '0644'
