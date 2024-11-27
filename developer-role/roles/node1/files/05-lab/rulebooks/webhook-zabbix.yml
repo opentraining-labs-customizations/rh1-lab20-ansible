@@ -7,7 +7,7 @@
         port: 5000
   rules:
     - name: Zabbix Apache 
-      condition: event.payload.event_name == "Apache is Down"
+      condition: event.payload.event_name == "Apache: Service is down"
       action:
         run_job_template:
           name: project-http
