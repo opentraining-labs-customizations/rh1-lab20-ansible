@@ -7,10 +7,10 @@
         port: 5000
   rules:
     - name: Zabbix Apache 
-      condition: event.payload.event_name is regex("Apache.*Service is down", ignorecase=true)
+      condition: event.payload.event_name == "Apache is Down"
       action:
         run_job_template:
-          name: projeto-http
+          name: project-http
           organization: Default
           job_args:
             extra_vars:

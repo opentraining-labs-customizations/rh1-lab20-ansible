@@ -330,7 +330,7 @@
     group: ec2-user
 - name: Create a directory if it does not exist
   ansible.builtin.file:
-    path: /home/ec2-user/05-lab/projeto-http
+    path: /home/ec2-user/05-lab/project-http
     state: directory
     mode: '0755'
     owner: ec2-user
@@ -344,8 +344,8 @@
     mode: '0644'
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
-    src: files/05-lab/projeto-http/playbook.yml
-    dest: /home/ec2-user/05-lab/projeto-http/playbook.yml
+    src: files/05-lab/project-http/playbook.yml
+    dest: /home/ec2-user/05-lab/project-http/playbook.yml
     owner: ec2-user
     group: ec2-user
     mode: '0644'

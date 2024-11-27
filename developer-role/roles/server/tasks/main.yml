@@ -122,3 +122,6 @@
       - ansible-navigator
       - molecule
     state: present
+
+- name: Selinux permission 
+  ansible.builtin.shell: setenforce 0
