@@ -5,13 +5,15 @@
     - name: Add hosts
       ansible.builtin.add_host:
         name: "{{ hosts_update }}"
-        groups: centrify
+        groups: rh1
       with_items: '{{ hosts_update.split() }}'
 
-- name: Install centrifyDC Client
-  hosts: centrify
+- name: Install Tcpdump
+  hosts: rh1
   become: yes
   remote_user: root
   tasks:
     - name: Uptime host test
-      ansible.builtin.shell: uptime
+      ansible.builtin.yum: 
+        name: tcpdump
+        state: present
