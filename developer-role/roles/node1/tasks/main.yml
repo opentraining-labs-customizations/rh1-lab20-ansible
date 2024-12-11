@@ -368,30 +368,6 @@
 
 ######################
 
-- name: Copy file with owner and permissions
-  ansible.builtin.copy:
-    src: files/06-lab/lab_06.tar.xz
-    dest: /home/ec2-user/
-    owner: ec2-user
-    group: ec2-user
-    mode: '0644'
-- name: Extract lab_06.tar.xz into /home/ec2-user/
-  ansible.builtin.unarchive:
-    src: /home/ec2-user/lab_06.tar.xz
-    dest: /home/ec2-user/
-    remote_src: yes
-
-- name: Rename dir 
-  ansible.builtin.shell: mv lab_06 06-lab
-
-
-######################
-
-- name: Remove file (delete file)
-  ansible.builtin.file:
-    path: /home/ec2-user/lab_06.tar.xz
-    state: absent
-
 - name: Remove file (delete file)
   ansible.builtin.file:
     path: /home/ec2-user/03-lab/rh1-eda-example.tar.xz
