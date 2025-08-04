@@ -80,17 +80,12 @@
 
 ######################
 
-- name: Install packages
+- name: Install utility packages
   ansible.builtin.yum:
-    name: 
-      - ansible-builder.noarch
-      - ansible-rulebook.noarch
-      - ansible-lint.noarch
+    name:
       - socat.x86_64
       - wireshark.x86_64
       - tcpdump.x86_64
-      - ansible-navigator
-      - molecule
     state: present
 
 ######################
